@@ -1,0 +1,40 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build outputs
+bin/
+obj/
+Debug/
+Release/
+
+# Visual Studio Code settings
+.vscode/
+
+# Resx / Designer generated files
+*.Designer.cs
+
+# NuGet
+*.nupkg
+packages/
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# OS files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Logs
+*.log
+
+# NSSM folder (si no quieres versionarlo)
+nssm/
+
+# JARs que se agregan como servicio
+*.jar
