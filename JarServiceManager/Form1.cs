@@ -159,16 +159,20 @@ namespace JarServiceManager
 
         private void btnUninstall_Click(object sender, EventArgs e)
         {
-            if (dgvServicios.CurrentRow == null) return;
+            DialogResult resultado = MessageBox.Show("¿Seguro quiere eliminar el Servicio?", "Confirmar", MessageBoxButtons.YesNo);
+            if (resultado == DialogResult.Yes)
+            {
+                if (dgvServicios.CurrentRow == null) return;
 
-            string serviceName = dgvServicios.CurrentRow.Cells[0].Value.ToString();
-            string nssmPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "nssm", "nssm.exe");
+                string serviceName = dgvServicios.CurrentRow.Cells[0].Value.ToString();
+                string nssmPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "nssm", "nssm.exe");
 
-            ProcessStart(nssmPath, $"stop \"{serviceName}\"");
-            ProcessStart(nssmPath, $"remove \"{serviceName}\" confirm");
+                ProcessStart(nssmPath, $"stop \"{serviceName}\"");
+                ProcessStart(nssmPath, $"remove \"{serviceName}\" confirm");
 
-            CargarServicios();
-            MessageBox.Show($"Servicio {serviceName} detenido y desinstalado.");
+                CargarServicios();
+                MessageBox.Show($"Servicio {serviceName} detenido y desinstalado.");
+            } 
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -241,6 +245,31 @@ namespace JarServiceManager
 
             if (ofd.ShowDialog() == DialogResult.OK)
                 txtJarPath.Text = ofd.FileName;
+        }
+
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            txtFiltro.ResetText();
+        }
+
+        private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            DialogResult resultado = MessageBox.Show("¿Seguro que querés cerrar?", "Confirmar", MessageBoxButtons.YesNo);
+            if (resultado == DialogResult.Yes)
+            {
+                this.Close(); // Cancela el cierre
+            }
+        }
+
+        private void minimizeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
         }
     }
 }
