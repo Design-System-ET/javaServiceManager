@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.ServiceProcess;
 using System.Text;
 using System.Windows.Forms;
 
@@ -172,7 +173,7 @@ namespace JarServiceManager
 
                 CargarServicios();
                 MessageBox.Show($"Servicio {serviceName} detenido y desinstalado.");
-            } 
+            }
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -250,7 +251,48 @@ namespace JarServiceManager
 
         private void button2_Click(object sender, EventArgs e)
         {
+            // Ejemplo: tomamos el nombre del servicio seleccionado en un DataGridView
+            string serviceName = dgvServicios.CurrentRow.Cells["dataGridViewTextBoxColumn1"].Value.ToString();
 
+            try
+            {
+                string jarName = serviceName.Substring(8) + ".jar";
+
+                var proceso = Process.GetProcessesByName("java")
+                    .FirstOrDefault(p =>
+                    {
+                        try
+                        {
+                            using var searcher = new System.Management.ManagementObjectSearcher(
+                                $"SELECT CommandLine FROM Win32_Process WHERE ProcessId = {p.Id}");
+                            var moc = searcher.Get().Cast<System.Management.ManagementBaseObject>().FirstOrDefault();
+                            return moc?["CommandLine"]?.ToString().Contains(jarName, StringComparison.OrdinalIgnoreCase) ?? false;
+                        }
+                        catch { return false; }
+                    });
+
+                if (proceso == null)
+                {
+                    MessageBox.Show("El servicio no se está ejecutando.", "Estado del servicio", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                using var cpuCounter = new PerformanceCounter("Process", "% Processor Time", proceso.ProcessName, true);
+                using var memCounter = new PerformanceCounter("Process", "Working Set - Private", proceso.ProcessName, true);
+
+                float cpu = cpuCounter.NextValue() / Environment.ProcessorCount;
+                float mem = memCounter.NextValue() / 1024 / 1024; // MB
+
+                TimeSpan uptime = DateTime.Now - proceso.StartTime;
+
+                string msg = $"Estado: Running\nCPU: {cpu:F1}%\nMemoria: {mem:F1} MB\nTiempo de ejecución: {uptime:hh\\:mm\\:ss}";
+
+                MessageBox.Show(msg, $"Estado del servicio - {serviceName}", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al obtener estado del servicio:\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -270,6 +312,14 @@ namespace JarServiceManager
         private void minimizeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (dgvServicios.CurrentRow == null) return;
+            string serviceName = dgvServicios.CurrentRow.Cells[0].Value.ToString();
+            FormGraph fg = new FormGraph(serviceName);
+            fg.Show();
         }
     }
 }
