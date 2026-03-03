@@ -5,6 +5,8 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Windows.Forms;
+using static System.Windows.Forms.DataFormats;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace JarServiceManager
 {
@@ -15,6 +17,33 @@ namespace JarServiceManager
         public Form1()
         {
             InitializeComponent();
+
+            Style.ApplyFormStyle(this);
+            Style.ApplyGroupBoxStyle(groupBox1);
+            Style.ApplyGroupBoxStyle(groupBox2);
+            Style.ApplyGroupBoxStyle(groupBox3);
+
+
+            Style.ApplyButtonPrimary(btnBrowse);
+            Style.ApplyButtonRadius(btnBrowse, 1);
+
+            Style.ApplyButtonPrimary(btnInstall);
+            Style.ApplyButtonRadius(btnInstall, 1);
+
+            Style.ApplyButtonPrimary(btnStart);
+            Style.ApplyButtonRadius(btnStart, 1);
+
+
+            Style.ApplyButtonSecondary(btnStop);
+            Style.ApplyButtonSecondary(btnRefresh);
+            Style.ApplyButtonSecondary(btnRestart);
+            Style.ApplyButtonSecondary(btnUninstall);
+            Style.ApplyButtonSecondary(btnViewLog);
+
+            Style.SetPictureBoxOpacity(pictureBox1, 0.5f);
+
+
+
 
             timerRefresh.Interval = 5000;
             timerRefresh.Tick += (s, e) => CargarServicios();
@@ -248,7 +277,6 @@ namespace JarServiceManager
                 txtJarPath.Text = ofd.FileName;
         }
 
-
         private void button2_Click(object sender, EventArgs e)
         {
             // Ejemplo: tomamos el nombre del servicio seleccionado en un DataGridView
@@ -320,6 +348,12 @@ namespace JarServiceManager
             string serviceName = dgvServicios.CurrentRow.Cells[0].Value.ToString();
             FormGraph fg = new FormGraph(serviceName);
             fg.Show();
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            About frm = new About();
+            frm.ShowDialog();
         }
     }
 }

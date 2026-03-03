@@ -6,11 +6,35 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationIcon>JSM.ico</ApplicationIcon>
+    <ApplicationIcon>Ico_2.ico</ApplicationIcon>
+
+	<!-- Versiones automáticas -->
+	<Version>1.0.0</Version>
+	<AssemblyVersion>1.0.0.0</AssemblyVersion>
+	<FileVersion>1.0.0.0</FileVersion>
+  </PropertyGroup>
+
+    <!-- Generar Build y Revision automáticos -->
+    <Target Name="SetVersion" BeforeTargets="BeforeBuild">
+	    <PropertyGroup>
+		    <Year>$([System.DateTime]::Now.ToString("yy"))</Year>
+		    <DayOfYear>$([System.DateTime]::Now.DayOfYear)</DayOfYear>
+		    <Seconds>$([System.DateTime]::Now.ToString("HHmmss"))</Seconds>
+		    <AssemblyVersion>1.0.$(DayOfYear).$(Seconds)</AssemblyVersion>
+		    <FileVersion>1.0.$(DayOfYear).$(Seconds)</FileVersion>
+	    </PropertyGroup>
+    </Target>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="JSM.ico" />
+    <Content Include="Ico_2.ico" />
   </ItemGroup>
 
   <ItemGroup>
