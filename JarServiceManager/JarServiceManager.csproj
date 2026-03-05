@@ -15,15 +15,14 @@
   </PropertyGroup>
 
     <!-- Generar Build y Revision automáticos -->
-    <Target Name="SetVersion" BeforeTargets="BeforeBuild">
-	    <PropertyGroup>
-		    <Year>$([System.DateTime]::Now.ToString("yy"))</Year>
-		    <DayOfYear>$([System.DateTime]::Now.DayOfYear)</DayOfYear>
-		    <Seconds>$([System.DateTime]::Now.ToString("HHmmss"))</Seconds>
-		    <AssemblyVersion>1.0.$(DayOfYear).$(Seconds)</AssemblyVersion>
-		    <FileVersion>1.0.$(DayOfYear).$(Seconds)</FileVersion>
-	    </PropertyGroup>
-    </Target>
+	<Target Name="SetVersion" BeforeTargets="BeforeBuild">
+		<PropertyGroup>
+			<DayOfYear>$([System.DateTime]::Now.DayOfYear)</DayOfYear>
+			<Minute>$([System.DateTime]::Now.ToString("HHmm"))</Minute>
+			<AssemblyVersion>1.0.$(DayOfYear).$(Minute)</AssemblyVersion>
+			<FileVersion>1.0.$(DayOfYear).$(Minute)</FileVersion>
+		</PropertyGroup>
+	</Target>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
