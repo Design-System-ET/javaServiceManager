@@ -52,6 +52,14 @@ namespace JarServiceManager
             CargarServicios();
         }
 
+
+        //recibir parametros de menu contextual
+        public void SetJarPathAndInstall(string jarPath)
+        {
+            txtJarPath.Text = jarPath;
+            btnInstall_Click(this, EventArgs.Empty);
+        }
+
         private void CargarServicios()
         {
             dgvServicios.Rows.Clear();
