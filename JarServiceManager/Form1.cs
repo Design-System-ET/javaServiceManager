@@ -14,10 +14,47 @@ namespace JarServiceManager
     {
         private System.Windows.Forms.Timer timerRefresh = new System.Windows.Forms.Timer();
 
+        //icono para barra de tareas
+        NotifyIcon trayIcon;
+
         public Form1()
         {
             InitializeComponent();
 
+            //cuando la ventana cambie de tamano se oculta
+            this.Resize += Form1_Resize;
+
+            // Ocultar ventana al iniciar
+            this.WindowState = FormWindowState.Minimized;
+            this.ShowInTaskbar = false;
+            this.Hide();
+
+            //constructor del icono de notificacion
+            trayIcon = new NotifyIcon();
+            trayIcon.Icon = this.Icon;
+            trayIcon.Text = "Jar Service Manager";
+            trayIcon.Visible = true;
+
+            ContextMenuStrip menu = new ContextMenuStrip();
+
+            menu.Items.Add("Abrir", null, (s, e) =>
+            {
+                this.Show();
+                this.WindowState = FormWindowState.Normal;
+                this.ShowInTaskbar = true;
+            });
+
+            menu.Items.Add("Salir", null, (s, e) =>
+            {
+                trayIcon.Visible = false;
+                Application.Exit();
+            });
+
+            trayIcon.ContextMenuStrip = menu;
+
+
+
+            //aplico estilos
             Style.ApplyFormStyle(this);
             Style.ApplyGroupBoxStyle(groupBox1);
             Style.ApplyGroupBoxStyle(groupBox2);
@@ -50,6 +87,17 @@ namespace JarServiceManager
             timerRefresh.Start();
 
             CargarServicios();
+        }
+
+
+        //oculta la ventana al minimizar
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                Hide();
+                ShowInTaskbar = false;
+            }
         }
 
 
