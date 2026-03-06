@@ -37,6 +37,14 @@ namespace JarServiceManager
 
                 var mainForm = new Form1();
 
+                // Si se pasó un .jar como argumento desde el menú contextual
+                if (args.Length > 1 && args[0].Equals("install", StringComparison.OrdinalIgnoreCase)
+                    && File.Exists(args[1])
+                    && Path.GetExtension(args[1]).Equals(".jar", StringComparison.OrdinalIgnoreCase))
+                {
+                    mainForm.SetJarPathAndInstall(args[1]); // llama automáticamente a btnInstall_Click
+                }
+
                 // Hilo que espera señales de nuevas instancias
                 ThreadPool.QueueUserWorkItem(_ =>
                 {
