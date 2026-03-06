@@ -24,11 +24,6 @@ namespace JarServiceManager
             //cuando la ventana cambie de tamano se oculta
             this.Resize += Form1_Resize;
 
-            // Ocultar ventana al iniciar
-            this.WindowState = FormWindowState.Minimized;
-            this.ShowInTaskbar = false;
-            this.Hide();
-
             //constructor del icono de notificacion
             trayIcon = new NotifyIcon();
             trayIcon.Icon = this.Icon;
@@ -87,6 +82,15 @@ namespace JarServiceManager
             timerRefresh.Start();
 
             CargarServicios();
+        }
+
+        // Mostrar la ventana aunque esté minimizada a bandeja
+        public void ShowFromTray()
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            this.BringToFront();
+            this.Activate();
         }
 
 

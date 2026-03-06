@@ -1,56 +1,58 @@
 using System;
-using System.IO;
-using System.Windows.Forms;
 using System.Threading;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace JarServiceManager
 {
     static class Program
     {
-        // Mutex para asegurarse de que solo haya una instancia de JSM corriendo
-        static Mutex mutex = new Mutex(true, "JSM_SINGLE_INSTANCE");
-
-        // Permite traer la ventana existente al frente
-        [DllImport("user32.dll")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
+        private const string MutexName = "JarServiceManagerSingletonMutex";
+        private const string EventName = "JarServiceManagerBringToFrontEvent";
 
         [STAThread]
-        static void Main(string[] args)  // <-- recibir argumentos
+        static void Main(string[] args)
         {
-            // Revisar si ya hay una instancia corriendo
-            if (!mutex.WaitOne(TimeSpan.Zero, true))
+            bool createdNew;
+            using (Mutex mutex = new Mutex(true, MutexName, out createdNew))
             {
-                // Buscar la ventana principal existente y traerla al frente
-                foreach (var p in Process.GetProcessesByName("JarServiceManager"))
+                if (!createdNew)
                 {
-                    if (p.MainWindowHandle != IntPtr.Zero)
+                    // Ya hay una instancia: enviamos señal para restaurarla
+                    try
                     {
-                        SetForegroundWindow(p.MainWindowHandle);
-                        break;
+                        EventWaitHandle.OpenExisting(EventName).Set();
                     }
+                    catch { }
+                    return; // salir de la nueva instancia
                 }
-                return; // salir de la nueva instancia
+
+                // Creamos EventWaitHandle para recibir señales de nuevas instancias
+                EventWaitHandle eventHandle = new EventWaitHandle(false, EventResetMode.AutoReset, EventName);
+
+
+                //soluciona problema de elementos ofuscados
+                Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+
+                var mainForm = new Form1();
+
+                // Hilo que espera señales de nuevas instancias
+                ThreadPool.QueueUserWorkItem(_ =>
+                {
+                    while (true)
+                    {
+                        eventHandle.WaitOne();
+                        // Restaurar la ventana desde bandeja
+                        if (mainForm.InvokeRequired)
+                            mainForm.Invoke(new Action(mainForm.ShowFromTray));
+                        else
+                            mainForm.ShowFromTray();
+                    }
+                });
+
+                Application.Run(mainForm);
             }
-
-            // Esto soluciona los elementos ofuscados y la DPI alta
-            Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
-            var mainForm = new Form1();
-
-            // Si se pasó un .jar como argumento desde el menú contextual
-            if (args.Length > 1 && args[0].Equals("install", StringComparison.OrdinalIgnoreCase)
-                && File.Exists(args[1])
-                && Path.GetExtension(args[1]).Equals(".jar", StringComparison.OrdinalIgnoreCase))
-            {
-                mainForm.SetJarPathAndInstall(args[1]); // llama automáticamente a btnInstall_Click
-            }
-
-            // Ejecutar la aplicación
-            Application.Run(mainForm);
         }
     }
 }
