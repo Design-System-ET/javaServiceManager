@@ -388,14 +388,6 @@ namespace JarServiceManager
             txtFiltro.ResetText();
         }
 
-        private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            DialogResult resultado = MessageBox.Show("¿Seguro que querés cerrar?", "Confirmar", MessageBoxButtons.YesNo);
-            if (resultado == DialogResult.Yes)
-            {
-                this.Close(); // Cancela el cierre
-            }
-        }
 
         private void minimizeToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -414,6 +406,33 @@ namespace JarServiceManager
         {
             About frm = new About();
             frm.ShowDialog();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult resultado = MessageBox.Show("¿Seguro que querés cerrar?", "Confirmar", MessageBoxButtons.YesNo);
+            if (resultado == DialogResult.Yes)
+            {
+                this.Close(); // Cancela el cierre
+            }
+        }
+
+        private void technicalSupportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string numero = "59891388175"; // sin + ni espacios
+            string url = $"https://wa.me/{numero}";
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
+            });
+        }
+
+        private void developerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Developer dev = new Developer();
+            dev.ShowDialog();
         }
     }
 }

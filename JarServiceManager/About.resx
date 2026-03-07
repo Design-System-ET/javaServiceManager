@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="label5.Text" xml:space="preserve">
-    <value>Jar Service Manager (JSM) es una herramienta ligera para Windows que permite instalar, ejecutar y administrar cualquier archivo .jar como servicio del sistema. Está diseñada para entornos con recursos limitados donde Docker no es viable, ofreciendo control centralizado de estado, reinicio automático ante fallos, acceso a logs y operación simplificada mediante una interfaz gráfica integrada con NSSM. Ideal para gestionar múltiples aplicaciones Java.</value>
+    <value>Jar Service Manager (JSM) is a lightweight Windows tool that allows you to install, run, and manage any .jar file as a system service. It is designed for environments with limited resources where Docker is not feasible, providing centralized status control, automatic restart on failure, log access, and simplified operation through a graphical interface integrated with NSSM. Ideal for managing multiple Java applications.</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
