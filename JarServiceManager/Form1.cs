@@ -17,6 +17,10 @@ namespace JarServiceManager
         //icono para barra de tareas
         NotifyIcon trayIcon;
 
+        // direcciones de logs
+        private string rutaStdout = @"C:\logs\stdout.log";
+        private string rutaStderr = @"C:\logs\stderr.log";
+
         public Form1()
         {
             InitializeComponent();
@@ -75,6 +79,17 @@ namespace JarServiceManager
             Style.SetPictureBoxOpacity(pictureBox1, 0.5f);
 
 
+            // Obtener la ruta de la carpeta Documentos
+            string documentos = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            // Ruta de la carpeta que queremos crear
+            string rutaJars = Path.Combine(documentos, "JARs - Jar Server Manager");
+
+            // Crear la carpeta si no existe
+            if (!Directory.Exists(rutaJars))
+            {
+                Directory.CreateDirectory(rutaJars);
+            }
 
 
             timerRefresh.Interval = 5000;
@@ -433,6 +448,61 @@ namespace JarServiceManager
         {
             Developer dev = new Developer();
             dev.ShowDialog();
+        }
+
+        private void stderrToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string serviceName = dgvServicios.CurrentRow.Cells[0].Value.ToString();
+            string logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                                          "JarServiceManager", "Logs", serviceName, "stderr.log");
+            AbrirLogCMD(logPath);
+        }
+
+        private void stdoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string serviceName = dgvServicios.CurrentRow.Cells[0].Value.ToString();
+            string logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                                          "JarServiceManager", "Logs", serviceName, "stdout.log");
+            AbrirLogCMD(logPath);
+        }
+
+
+        //muestra logs por cmd con tail -f
+        private void AbrirLogCMD(string logPath)
+        {
+            if (!File.Exists(logPath))
+            {
+                MessageBox.Show("No existe el log: " + logPath);
+                return;
+            }
+
+            // PowerShell tail -f
+            string comandoPowerShell = $"powershell -Command \"Get-Content -Path '{logPath}' -Wait -Tail 50\"";
+
+            // Abrir cmd con fondo blanco y texto negro
+            string argumentos = $"/K color F0 & {comandoPowerShell}";
+
+            System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = argumentos,
+                UseShellExecute = true
+            };
+
+            System.Diagnostics.Process.Start(psi);
+        }
+
+        private void openFolderJARToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string documentos = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string rutaJars = Path.Combine(documentos, "JARs - Jar Server Manager");
+
+            // Asegurarse de que la carpeta exista
+            if (!Directory.Exists(rutaJars))
+                Directory.CreateDirectory(rutaJars);
+
+            // Abrir la carpeta
+            System.Diagnostics.Process.Start("explorer.exe", rutaJars);
         }
     }
 }
