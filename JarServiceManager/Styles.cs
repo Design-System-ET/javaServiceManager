@@ -18,8 +18,8 @@ namespace JarServiceManager
         public static readonly Color BorderColor = ColorTranslator.FromHtml("#E5E7EB");
 
         // Colores botones
-        public static readonly Color ButtonPrimary = ColorTranslator.FromHtml("SteelBlue"); 
-        public static readonly Color ButtonPrimaryHover = ColorTranslator.FromHtml("CornflowerBlue");
+        public static readonly Color ButtonPrimary = ColorTranslator.FromHtml("#018ee6"); 
+        public static readonly Color ButtonPrimaryHover = ColorTranslator.FromHtml("#014897");
         public static readonly Color ButtonDisabled = ColorTranslator.FromHtml("#93C5FD");
         public static readonly Color ButtonText = Color.White;
 

@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationIcon>Ico_2.ico</ApplicationIcon>
+    <ApplicationIcon>icon_pajaro.ico</ApplicationIcon>
 
 	<!-- Versiones automáticas -->
 	<Version>1.0.0</Version>
@@ -33,7 +33,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Ico_2.ico" />
+    <Content Include="icon_pajaro.ico" />
   </ItemGroup>
 
   <ItemGroup>
