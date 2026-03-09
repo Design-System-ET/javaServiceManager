@@ -72,7 +72,7 @@ namespace JarServiceManager
             chart1.Series.Add(memSeries);
 
             Legend legend = new Legend("Legend1");
-            legend.ForeColor = Color.White;
+            legend.ForeColor = Color.Black;
             chart1.Legends.Add(legend);
 
             chart1.BackColor = Color.FromArgb(30, 30, 30);
