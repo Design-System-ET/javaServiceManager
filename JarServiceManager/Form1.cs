@@ -43,6 +43,32 @@ namespace JarServiceManager
                 this.ShowInTaskbar = true;
             });
 
+            menu.Items.Add("Carpeta Jar", null, (s, e) =>
+            {
+                string documentos = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string rutaJars = Path.Combine(documentos, "JARs - Jar Server Manager");
+
+                // Asegurarse de que la carpeta exista
+                if (!Directory.Exists(rutaJars))
+                    Directory.CreateDirectory(rutaJars);
+
+                // Abrir la carpeta
+                System.Diagnostics.Process.Start("explorer.exe", rutaJars);
+            });
+
+            menu.Items.Add("Carpeta Logs", null, (s, e) =>
+            {
+                if (dgvServicios.CurrentRow == null) return;
+
+                string logDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                                             "JarServiceManager", "Logs");
+
+                if (Directory.Exists(logDir))
+                    Process.Start("explorer.exe", logDir);
+                else
+                    MessageBox.Show("No hay logs disponibles para este servicio.");
+            });
+
             menu.Items.Add("Salir", null, (s, e) =>
             {
                 trayIcon.Visible = false;
